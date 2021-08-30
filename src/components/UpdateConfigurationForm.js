@@ -25,14 +25,22 @@ const UpdateConfigurationForm = ({ currentHost, currentProtocol, updateNetworkCo
                 <Form.Label>Network Host</Form.Label>
                 <Form.Control placeholder={currentHost} onChange={(e) => setNewHost(e.target.value)}></Form.Control>
             </Form.Group>
-            {/* <Form.Group controlId="formProtocol">
+            <Form.Group controlId="formProtocol">
                 <Form.Label>Protocol</Form.Label>
-                <Form.Select aria-label="formProtocolSelect">
+                <Form.Select aria-label="formProtocolSelect" onChange={(e) => setNewProtocol(e.target.value)}>
                     <option>Select protocol</option>
-                    <option value="http">http</option>
-                    <option value="https">https</option>
+                    {currentProtocol === "http" ? (
+                        <option value="http" selected>http</option>
+                    ) : (
+                        <option value="http">http</option>
+                    )}
+                    {currentProtocol === "https" ? (
+                        <option value="https" selected>https</option>
+                    ) : (
+                        <option value="https">https</option>
+                    )}
                 </Form.Select>
-            </Form.Group> */}
+            </Form.Group>
             <Form.Group className="mt-3" style={{ float: "right" }}>
                 <Button variant="primary" type="submit">Save Changes</Button>
             </Form.Group>
