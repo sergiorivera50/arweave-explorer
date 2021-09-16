@@ -2,8 +2,12 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 import { Container, Row, Col, Button, Card } from 'react-bootstrap'
+import { AiOutlineLoading, AiOutlineExclamationCircle } from 'react-icons/ai'
+
 import Navbar from './components/Navbar'
 import NetworkInfoCard from './components/NetworkInfoCard'
+import NFTExplorerCard from './components/NFTExplorerCard'
+import NotificationToast from './components/NotificationToast'
 
 import { NetworkStatus } from './constants/NetworkStatus'
 
@@ -20,6 +24,19 @@ function App() {
     node_state_latency: "null",
     queue_length: "null"
   }
+
+  const defaultManifest = {
+    nft: {
+      type: "null",
+      author: "null",
+      uri: "null"
+    }
+  }
+
+  const [manifestURI, setManifestURI] = useState("https://l4nescmg6zzlt3fghjxvyfonobgeyid65znkpvg2ioz6ydpgkelq.arweave.net/XxpJCYb2crnspjpvXBXNcExMIH7uWqfU2kOz7A3mURc")
+
+  const [manifest, setManifest] = useState(defaultManifest)
+
   const [networkInfo, setNetworkInfo] = useState(defaultNetworkInfo)
 
   const [networkStatus, setNetworkStatus] = useState(NetworkStatus.FETCHING)
@@ -53,8 +70,28 @@ function App() {
       console.log("error fetching")
     } else {
       setNetworkStatus(NetworkStatus.SUCCESS)
-      console.log(response)
+      console.log("arweave: ", response)
       setNetworkInfo(response)
+    }
+  }
+
+  const fetchManifest = async () => {
+    console.log('Fetching manifest from ' + manifestURI)
+    try {
+      const response = await fetch(manifestURI)
+      return [await response.json(), null]
+    } catch (error) {
+      return [null, error]
+    }
+  }
+  
+  const loadManifest = async () => {
+    const [response, error] = await fetchManifest()
+    if (error) {
+      setManifest("Error fetching manifest.")
+    } else {
+      setManifest(response)
+      console.log("manifest: ", response)
     }
   }
 
@@ -67,6 +104,10 @@ function App() {
   useEffect(() => {
     loadNetworkInfo()
   }, [host, protocol])
+
+  useEffect(() => {
+    if (networkStatus === NetworkStatus.SUCCESS) loadManifest()
+  }, [networkStatus])
 
   return (
     <div className="App">
@@ -85,6 +126,29 @@ function App() {
             networkStatus={networkStatus}
           />
         </Container>
+        {networkStatus === NetworkStatus.SUCCESS && (
+          <>
+            <Container>
+              <NFTExplorerCard manifest={manifest} manifestURI={manifestURI}/>
+            </Container>
+          </>
+        )}
+
+        {networkStatus === NetworkStatus.FETCHING && (
+          <NotificationToast 
+            bg='light'
+            title='Fetching data'
+            icon={(<AiOutlineLoading className="icon-spin"/>)}
+          />
+        )}
+
+        {networkStatus === NetworkStatus.ERROR && (
+          <NotificationToast 
+            bg='danger'
+            title='Connection failed'
+            icon={(<AiOutlineExclamationCircle />)}
+          />
+        )}
       </header>
     </div>
   );

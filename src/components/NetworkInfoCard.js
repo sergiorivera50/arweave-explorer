@@ -1,4 +1,4 @@
-import { Button, Card, Row } from 'react-bootstrap'
+import { Button, Card, Row, Col } from 'react-bootstrap'
 import ChangeNetworkModal from './ChangeNetworkModal'
 import NetworkInfoTable from './NetworkInfoTable'
 import { NetworkStatus } from '../constants/NetworkStatus'
@@ -27,45 +27,51 @@ const NetworkInfoCard = ({
 
     return (
         <>
-           <Card>
-            <Card.Header as="h2">
-              Network Information
-              <Button 
-                style={{ float: "right" }}
-                variant={buttonOutline()}
-                onClick={showChangeNetworkOpen}>
-                {host}
-              </Button>
-            </Card.Header>
+          <Card>
+          <Card.Header as="h2">
+            <Row className="align-items-center">
+              <Col>
+                Network Information
+              </Col>
+              <Col>
+                <Button 
+                  style={{ float: "right" }}
+                  variant={buttonOutline()}
+                  onClick={showChangeNetworkOpen}>
+                  <samp>{host}</samp>
+                </Button>
+              </Col>
+            </Row>
+          </Card.Header>
 
-            <Card.Body>
-              <Card.Text>
-                  {networkStatus !== NetworkStatus.ERROR ? (
-                    <NetworkInfoTable 
-                      networkInfo={networkInfo}
-                      networkStatus={networkStatus}
-                    />
-                  ) : (
-                    <>
-                      <Row className="mt-4">
-                        <VscDebugDisconnect size={40} style={{ color: "grey" }}/>
-                        <p class="text-center text-muted"><pre>{protocol}://{host}/info</pre></p>
-                      </Row>
-                    </>
-                  )}
-              </Card.Text>
-            </Card.Body>
-          </Card>
+          <Card.Body>
+            <Card.Text>
+                {networkStatus !== NetworkStatus.ERROR ? (
+                  <NetworkInfoTable 
+                    networkInfo={networkInfo}
+                    networkStatus={networkStatus}
+                  />
+                ) : (
+                  <>
+                    <Row className="mt-4">
+                      <VscDebugDisconnect size={40} style={{ color: "grey" }}/>
+                      <p class="text-center text-muted"><pre>{protocol}://{host}/info</pre></p>
+                    </Row>
+                  </>
+                )}
+            </Card.Text>
+          </Card.Body>
+        </Card>
 
-          <ChangeNetworkModal 
-            showChangeNetwork={showChangeNetwork}
-            showChangeNetworkOpen={showChangeNetworkOpen}
-            showChangeNetworkClose={showChangeNetworkClose}
-            currentHost={host}
-            currentProtocol={protocol}
-            updateNetworkConfiguration={updateNetworkConfiguration}
-          /> 
-        </>
+        <ChangeNetworkModal 
+          showChangeNetwork={showChangeNetwork}
+          showChangeNetworkOpen={showChangeNetworkOpen}
+          showChangeNetworkClose={showChangeNetworkClose}
+          currentHost={host}
+          currentProtocol={protocol}
+          updateNetworkConfiguration={updateNetworkConfiguration}
+        /> 
+      </>
     )
 }
 

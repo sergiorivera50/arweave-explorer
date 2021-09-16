@@ -8,13 +8,13 @@ const NetworkInfoTable = ({ networkInfo, networkStatus }) => {
           <Table hover className="align-middle">
             <thead>
               <tr>
-                <th>network</th>
-                <th>version</th>
-                <th>release</th>
-                <th>peers</th>
-                <th>blocks</th>
-                <th>height</th>
-                <th>queue_length</th>
+                <th><samp>network</samp></th>
+                <th><samp>version</samp></th>
+                <th><samp>release</samp></th>
+                <th><samp>peers</samp></th>
+                <th><samp>blocks</samp></th>
+                <th><samp>height</samp></th>
+                <th><samp>queue_length</samp></th>
               </tr>
             </thead>
             <tbody>
